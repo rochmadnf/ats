@@ -47,6 +47,46 @@ void showData(int DATA[])
   (DATA[4] == 1) ? lcd.print("ON") : lcd.print("OFF");
 }
 
+void switchPG(int pln, int genset)
+{
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("SWITCH");
+  lcd.setCursor(0, 1);
+  (pln == 1) ? lcd.print("PLN") : lcd.print("GENSET");
+  lcd.setCursor(0, 2);
+  lcd.print("TO");
+  lcd.setCursor(0, 3);
+  (genset == 0) ? lcd.print("GENSET") : lcd.print("PLN");
+  delay(2000);
+}
+
+void noKedip(int volt, int stat)
+{
+  int kedip = volt;
+  /*
+  0 => PLN
+  1 => GENSET
+  */
+
+  if (stat = 0)
+  {
+    while (kedip = 0)
+    {
+      kedip = ats.voltage();
+      delay(500);
+    }
+  }
+  else
+  {
+    while (kedip > 0)
+    {
+      kedip = ats.voltage();
+      delay(500);
+    }
+  }
+}
+
 void loop()
 {
   tegangan = ats.voltage();
@@ -64,6 +104,8 @@ void loop()
     showTegangan();
     int dataArray[5] = {tegangan, 17, 17, 1, 0};
     showData(dataArray);
+    noKedip(tegangan, 0);
+    // switchPG(1, 0);
   }
 
   // NAN
@@ -78,6 +120,8 @@ void loop()
     showTegangan();
     int dataArray[5] = {0, 19, 18, 0, 1};
     showData(dataArray);
+    noKedip(tegangan, 1);
+    // switchPG(0, 1);
   }
-  delay(3500);
+  delay(1000);
 }
